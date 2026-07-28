@@ -12,7 +12,7 @@ jobs:
   update-quote:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: 오늘의 한마디 갱신
         run: python3 update_quote.py
