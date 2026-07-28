@@ -20,6 +20,7 @@
       --chip-hover: #e8dcff;
       --chip-on: #d9c7ff;
       --shadow: rgba(180, 160, 200, 0.18);
+      --ring: linear-gradient(135deg, #ffb3d1, #a9c8ff, #b8f0c4);
     }
     :root[data-theme="dark"] {
       --bg: linear-gradient(135deg, #2b2333 0%, #232a38 50%, #23322c 100%);
@@ -30,6 +31,7 @@
       --chip-hover: #4a3f66;
       --chip-on: #5a4b7d;
       --shadow: rgba(0, 0, 0, 0.35);
+      --ring: linear-gradient(135deg, #ff8fc0, #7fa8ff, #6fe0a0);
     }
     body {
       margin: 0;
@@ -40,6 +42,7 @@
       color: var(--text);
     }
     .card {
+      position: relative;
       max-width: 420px;
       margin: 0 auto;
       background: var(--card);
@@ -47,6 +50,15 @@
       padding: 32px;
       box-shadow: 0 8px 24px var(--shadow);
       text-align: center;
+    }
+    /* 카드 뒤로 2px 삐져나오게 깔아 그라데이션 테두리처럼 보이게 한다 */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 26px;
+      background: var(--ring);
+      z-index: -1;
     }
     img {
       width: 140px;
@@ -138,6 +150,45 @@
       outline: 3px solid var(--head);
       outline-offset: 2px;
     }
+    .floaties {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .floaties span {
+      position: absolute;
+      left: var(--x);
+      bottom: -80px;
+      font-size: var(--s, 28px);
+      opacity: 0.35;
+      animation: rise var(--t) linear var(--d) infinite;
+    }
+    @keyframes rise {
+      to {
+        transform: translate(20px, -110vh) rotate(24deg);
+      }
+    }
+    /* 움직임에 민감한 사용자에겐 배경을 아예 띄우지 않는다 */
+    @media (prefers-reduced-motion: reduce) {
+      .floaties {
+        display: none;
+      }
+    }
+    .spark {
+      position: fixed;
+      pointer-events: none;
+      z-index: 3;
+      transform: translate(-50%, -50%);
+      animation: spark 0.7s ease-out forwards;
+    }
+    @keyframes spark {
+      to {
+        transform: translate(-50%, -70px) scale(0.4);
+        opacity: 0;
+      }
+    }
     #theme-toggle {
       position: fixed;
       top: 16px;
@@ -150,17 +201,29 @@
   </style>
 </head>
 <body>
+  <!-- 장식용이라 스크린리더에서는 통째로 숨긴다 -->
+  <div class="floaties" aria-hidden="true">
+    <span style="--x:6%;  --d:0s;   --t:22s; --s:30px">☕</span>
+    <span style="--x:20%; --d:7s;   --t:27s; --s:22px">🐱</span>
+    <span style="--x:34%; --d:3s;   --t:19s; --s:26px">🍜</span>
+    <span style="--x:48%; --d:12s;  --t:25s; --s:20px">☕</span>
+    <span style="--x:62%; --d:5s;   --t:30s; --s:32px">🐱</span>
+    <span style="--x:76%; --d:15s;  --t:21s; --s:24px">🍜</span>
+    <span style="--x:88%; --d:9s;   --t:26s; --s:28px">☕</span>
+    <span style="--x:13%; --d:18s;  --t:24s; --s:20px">🍜</span>
+    <span style="--x:69%; --d:21s;  --t:28s; --s:22px">🐱</span>
+  </div>
   <button type="button" id="theme-toggle" aria-pressed="false" aria-label="다크모드 켜기">🌙</button>
   <div class="card">
     <img src="https://placehold.co/280x280/ffeaf2/c9a7d6?text=%3A%29" alt="심가연 프로필 이미지">
     <h1>심가연</h1>
-    <p class="intro">코드와 커피, 로파이가 있으면 하루가 완성돼요.</p>
+    <p class="intro">데이터사이언스전공 · 23학번</p>
     <h2>좋아하는 것 3가지</h2>
     <!-- list-style:none을 쓰면 Safari가 목록으로 노출하지 않아 role을 명시한다 -->
     <ul role="list">
-      <li>🌸 파스텔 색 조합</li>
-      <li>☕ 아침의 첫 커피</li>
-      <li>🎧 잔잔한 로파이 음악</li>
+      <li>☕ 커피</li>
+      <li>🐱 고양이</li>
+      <li>🍜 라멘</li>
     </ul>
     <h2>오늘 하루는 어떤 기분?</h2>
     <div class="moods">
@@ -174,6 +237,19 @@
     </nav>
   </div>
   <script>
+    var motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 화면 좌표에 이모지 하나를 띄웠다가 애니메이션이 끝나면 스스로 지운다
+    function spark(x, y, char, size) {
+      if (!motionOK) return;
+      var s = document.createElement('span');
+      s.className = 'spark';
+      s.textContent = char;
+      s.style.cssText = 'left:' + x + 'px; top:' + y + 'px; font-size:' + size + 'px';
+      s.addEventListener('animationend', function () { s.remove(); });
+      document.body.appendChild(s);
+    }
+
     var moods = document.querySelector('.moods');
     moods.addEventListener('click', function (e) {
       var btn = e.target.closest('button');
@@ -182,7 +258,19 @@
         b.setAttribute('aria-pressed', String(b === btn));
       });
       document.getElementById('mood-msg').textContent = btn.dataset.msg;
+      var r = btn.getBoundingClientRect();
+      spark(r.left + r.width / 2, r.top, btn.textContent, 30);
     });
+
+    // 커서 반짝임은 마우스가 있는 환경에서만, 90ms 간격으로만 만든다
+    if (matchMedia('(hover: hover)').matches) {
+      var lastSpark = 0;
+      addEventListener('mousemove', function (e) {
+        if (e.timeStamp - lastSpark < 90) return;
+        lastSpark = e.timeStamp;
+        spark(e.clientX, e.clientY, '✨', 14);
+      });
+    }
 
     var toggle = document.getElementById('theme-toggle');
     function paintToggle() {
