@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <!-- 연습용 의도적 실수 ①: <title> 없음 -->
+  <!-- 연습용 의도적 실수 ③: viewport 메타 없음 -->
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      background: linear-gradient(135deg, #ffe4ec 0%, #e4f0ff 50%, #e8ffe4 100%);
+      color: #5a5560;
+    }
+    .card {
+      max-width: 420px;
+      margin: 0 auto;
+      background: #fffdfa;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 8px 24px rgba(180, 160, 200, 0.18);
+      text-align: center;
+    }
+    img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #ffeaf2;
+    }
+    h1 {
+      margin: 20px 0 8px;
+      font-size: 28px;
+      color: #7a6a8a;
+    }
+    .intro {
+      margin: 0 0 28px;
+      color: #9a90a5;
+    }
+    h2 {
+      font-size: 16px;
+      color: #7a6a8a;
+      margin-bottom: 12px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      background: #f3ecff;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- 연습용 의도적 실수 ②: alt 속성 없음 -->
+    <img src="https://placehold.co/280x280/ffeaf2/c9a7d6?text=%3A%29">
+    <h1>김바이브</h1>
+    <p class="intro">코드로 하루를 조금씩 다듬는 사람이에요.</p>
+    <h2>좋아하는 것 3가지</h2>
+    <ul>
+      <li>🌸 파스텔 색 조합</li>
+      <li>☕ 아침의 첫 커피</li>
+      <li>🎧 잔잔한 로파이 음악</li>
+    </ul>
+  </div>
+</body>
+</html>
