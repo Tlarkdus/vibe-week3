@@ -52,6 +52,28 @@
       padding: 12px;
       margin-bottom: 10px;
     }
+    .moods {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .moods button {
+      font-size: 26px;
+      line-height: 1;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 14px;
+      background: #f3ecff;
+      cursor: pointer;
+    }
+    .moods button:hover {
+      background: #e8dcff;
+    }
+    #mood-msg {
+      min-height: 1.4em;
+      margin: 14px 0 0;
+      color: #9a90a5;
+    }
   </style>
 </head>
 <body>
@@ -65,6 +87,19 @@
       <li>☕ 아침의 첫 커피</li>
       <li>🎧 잔잔한 로파이 음악</li>
     </ul>
+    <h2>오늘 하루는 어떤 기분?</h2>
+    <div class="moods">
+      <button type="button" aria-label="기분 좋음" data-msg="좋은 흐름이에요. 그 기세 그대로 하루를 채워봐요 ✨">😊</button>
+      <button type="button" aria-label="기분 그저 그럼" data-msg="애매한 날도 하루예요. 커피 한 잔하고 천천히 가요 ☕">😐</button>
+      <button type="button" aria-label="기분 지침" data-msg="오늘은 잘 쉬는 게 일이에요. 내일의 나에게 넘겨도 괜찮아요 🌙">😮‍💨</button>
+    </div>
+    <p id="mood-msg" role="status"></p>
   </div>
+  <script>
+    document.querySelector('.moods').addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (btn) document.getElementById('mood-msg').textContent = btn.dataset.msg;
+    });
+  </script>
 </body>
 </html>
