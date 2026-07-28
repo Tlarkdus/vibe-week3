@@ -66,8 +66,19 @@
       background: #f3ecff;
       cursor: pointer;
     }
-    .moods button:hover {
-      background: #e8dcff;
+    /* 터치 기기는 hover가 마지막 버튼에 고착되므로 마우스 환경에서만 적용 */
+    @media (hover: hover) {
+      .moods button:hover {
+        background: #e8dcff;
+      }
+    }
+    .moods button:active,
+    .moods button[aria-pressed="true"] {
+      background: #d9c7ff;
+    }
+    .moods button:focus-visible {
+      outline: 3px solid #7a6a8a;
+      outline-offset: 2px;
     }
     #mood-msg {
       min-height: 1.4em;
@@ -82,23 +93,29 @@
     <h1>김바이브</h1>
     <p class="intro">코드와 커피, 로파이가 있으면 하루가 완성돼요.</p>
     <h2>좋아하는 것 3가지</h2>
-    <ul>
+    <!-- list-style:none을 쓰면 Safari가 목록으로 노출하지 않아 role을 명시한다 -->
+    <ul role="list">
       <li>🌸 파스텔 색 조합</li>
       <li>☕ 아침의 첫 커피</li>
       <li>🎧 잔잔한 로파이 음악</li>
     </ul>
     <h2>오늘 하루는 어떤 기분?</h2>
     <div class="moods">
-      <button type="button" aria-label="기분 좋음" data-msg="좋은 흐름이에요. 그 기세 그대로 하루를 채워봐요 ✨">😊</button>
-      <button type="button" aria-label="기분 그저 그럼" data-msg="애매한 날도 하루예요. 커피 한 잔하고 천천히 가요 ☕">😐</button>
-      <button type="button" aria-label="기분 지침" data-msg="오늘은 잘 쉬는 게 일이에요. 내일의 나에게 넘겨도 괜찮아요 🌙">😮‍💨</button>
+      <button type="button" aria-pressed="false" aria-label="기분 좋음" data-msg="좋은 흐름이에요. 그 기세 그대로 하루를 채워봐요 ✨">😊</button>
+      <button type="button" aria-pressed="false" aria-label="기분 그저 그럼" data-msg="애매한 날도 하루예요. 커피 한 잔하고 천천히 가요 ☕">😐</button>
+      <button type="button" aria-pressed="false" aria-label="기분 지침" data-msg="오늘은 잘 쉬는 게 일이에요. 내일의 나에게 넘겨도 괜찮아요 🌙">😮‍💨</button>
     </div>
     <p id="mood-msg" role="status"></p>
   </div>
   <script>
-    document.querySelector('.moods').addEventListener('click', function (e) {
+    var moods = document.querySelector('.moods');
+    moods.addEventListener('click', function (e) {
       var btn = e.target.closest('button');
-      if (btn) document.getElementById('mood-msg').textContent = btn.dataset.msg;
+      if (!btn) return;
+      moods.querySelectorAll('button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      document.getElementById('mood-msg').textContent = btn.dataset.msg;
     });
   </script>
 </body>
