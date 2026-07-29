@@ -30,7 +30,13 @@
     padding: 1.75rem;
     box-shadow: 0 0.5rem 1.5rem rgba(160, 140, 170, 0.15);
   }
-  h1 { margin: 0 0 1.25rem; font-size: 1.4rem; }
+  h1 {
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 1.55rem;
+    letter-spacing: -0.02em;
+  }
   form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   input {
     flex: 1 1 8rem;
@@ -61,19 +67,26 @@
   }
   button:active { transform: translateY(0); box-shadow: 0 0.1rem 0.3rem rgba(160, 140, 170, 0.25); }
   button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { button { transition: none; } button:hover { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { button { transition: none; } button:hover { transform: none; } .empty { animation: none; } li { transition: none; } }
   ul { list-style: none; margin: 1.5rem 0 0; padding: 0; }
   li {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 0.9rem;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
     margin-bottom: 0.5rem;
-    background: var(--mint);
-    border-radius: 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--mint);
+    border-radius: 12px;
+    transition: box-shadow 0.15s, border-left-color 0.15s;
+  }
+  li:hover {
+    border-left-color: var(--lilac);
+    box-shadow: 0 0.2rem 0.6rem rgba(160, 140, 170, 0.15);
   }
   li .name { flex: 1; }
-  li .amount { font-variant-numeric: tabular-nums; }
+  li .amount { font-variant-numeric: tabular-nums; font-weight: 600; }
   li button {
     background: #e6d5ff;
     padding: 0.3rem 0.75rem;
@@ -83,23 +96,28 @@
   .total {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
     margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 2px dashed var(--line);
-    font-size: 1.1rem;
+    padding: 1rem 1.1rem;
+    background: linear-gradient(120deg, #f7f0ff, var(--bg));
+    border-radius: 12px;
     font-weight: bold;
   }
+  .total span:first-child { font-size: 0.95rem; letter-spacing: 0.02em; color: #6b6375; }
+  #total { font-size: 1.35rem; color: #6b3fa0; font-variant-numeric: tabular-nums; }
   .empty {
     margin-top: 1.5rem;
     padding: 1.5rem 1rem;
-    border: 2px dashed var(--line);
+    border: 2px dashed #e3d3f7;
     border-radius: 12px;
-    background: var(--bg);
+    background: linear-gradient(var(--bg), #f7f0ff);
     text-align: center;
     line-height: 1.6;
     color: #6b6375;
+    animation: pop 0.35s ease-out;
   }
-  .empty .icon { font-size: 1.6rem; }
+  .empty .icon { font-size: 1.8rem; }
+  @keyframes pop { from { opacity: 0; transform: translateY(0.4rem); } }
 </style>
 </head>
 <body>
@@ -110,7 +128,7 @@
     <input id="amount" type="number" placeholder="금액" min="0" step="1" required>
     <button type="submit">추가</button>
   </form>
-  <p class="empty" id="empty"><span class="icon" aria-hidden="true">🌱</span><br>아직 기록된 지출이 없어요.<br>첫 항목을 추가해 보세요!</p>
+  <p class="empty" id="empty" aria-live="polite"><span class="icon" aria-hidden="true">🌱</span><br>아직 기록된 지출이 없어요.<br>첫 항목을 추가해 보세요!</p>
   <ul id="list"></ul>
   <div class="total"><span>합계</span><span id="total">0원</span></div>
 </main>
