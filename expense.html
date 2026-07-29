@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 가계부 분석기</title>
+<style>
+  :root {
+    --bg: #fdf6f9;
+    --card: #ffffff;
+    --pink: #f7cfe0;
+    --mint: #cfeee4;
+    --lilac: #ded3f2;
+    --text: #4a4453;
+    --line: #efe6ee;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    font-family: "Segoe UI", "맑은 고딕", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  main {
+    max-width: 30rem;
+    margin: 0 auto;
+    background: var(--card);
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(160, 140, 170, 0.15);
+  }
+  h1 { margin: 0 0 1.25rem; font-size: 1.4rem; }
+  form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  input {
+    flex: 1 1 8rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    font: inherit;
+    color: inherit;
+    background: var(--bg);
+  }
+  input:focus { outline: 2px solid var(--lilac); }
+  button {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: var(--lilac);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+  button:hover { filter: brightness(0.96); }
+  ul { list-style: none; margin: 1.5rem 0 0; padding: 0; }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.5rem;
+    background: var(--mint);
+    border-radius: 0.75rem;
+  }
+  li .name { flex: 1; }
+  li .amount { font-variant-numeric: tabular-nums; }
+  li button { background: var(--pink); padding: 0.3rem 0.6rem; font-size: 0.85rem; }
+  .total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px dashed var(--line);
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  .empty { margin-top: 1.5rem; text-align: center; color: #8c8496; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🧾 미니 가계부 분석기</h1>
+  <form id="form">
+    <input id="name" placeholder="항목명" required>
+    <input id="amount" type="number" placeholder="금액" min="0" step="1" required>
+    <button type="submit">추가</button>
+  </form>
+  <p class="empty" id="empty">아직 항목이 없어요. 첫 지출을 기록해 보세요!</p>
+  <ul id="list"></ul>
+  <div class="total"><span>합계</span><span id="total">0원</span></div>
+</main>
+<script>
+  const items = [];
+  const list = document.getElementById('list');
+  const empty = document.getElementById('empty');
+  const won = n => n.toLocaleString('ko-KR') + '원';
+
+  function render() {
+    list.textContent = '';
+    items.forEach((item, i) => {
+      const li = document.createElement('li');
+      const name = document.createElement('span');
+      name.className = 'name';
+      name.textContent = item.name;
+      const amount = document.createElement('span');
+      amount.className = 'amount';
+      amount.textContent = won(item.amount);
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.textContent = '삭제';
+      del.setAttribute('aria-label', item.name + ' 삭제');
+      del.onclick = () => { items.splice(i, 1); render(); };
+      li.append(name, amount, del);
+      list.append(li);
+    });
+    empty.hidden = items.length > 0;
+    document.getElementById('total').textContent =
+      won(items.reduce((sum, it) => sum + it.amount, 0));
+  }
+
+  document.getElementById('form').onsubmit = e => {
+    e.preventDefault();
+    const name = document.getElementById('name');
+    const amount = document.getElementById('amount');
+    items.push({ name: name.value.trim(), amount: Number(amount.value) });
+    name.value = amount.value = '';
+    name.focus();
+    render();
+  };
+
+  render();
+</script>
+</body>
+</html>
