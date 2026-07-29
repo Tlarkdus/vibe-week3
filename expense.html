@@ -10,7 +10,7 @@
     --card: #ffffff;
     --pink: #f7cfe0;
     --mint: #cfeee4;
-    --lilac: #ded3f2;
+    --lilac: #bb8cff;
     --text: #4a4453;
     --line: #efe6ee;
   }
@@ -43,15 +43,25 @@
   }
   input:focus { outline: 2px solid var(--lilac); }
   button {
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1.2rem;
     border: none;
-    border-radius: 0.75rem;
+    border-radius: 12px;
     background: var(--lilac);
-    color: var(--text);
+    color: #2a1b3d;
     font: inherit;
+    font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 0.2rem 0.5rem rgba(160, 140, 170, 0.25);
+    transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
   }
-  button:hover { filter: brightness(0.96); }
+  button:hover {
+    filter: brightness(1.04);
+    transform: translateY(-1px);
+    box-shadow: 0 0.35rem 0.8rem rgba(160, 140, 170, 0.35);
+  }
+  button:active { transform: translateY(0); box-shadow: 0 0.1rem 0.3rem rgba(160, 140, 170, 0.25); }
+  button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { button { transition: none; } button:hover { transform: none; } }
   ul { list-style: none; margin: 1.5rem 0 0; padding: 0; }
   li {
     display: flex;
@@ -64,7 +74,12 @@
   }
   li .name { flex: 1; }
   li .amount { font-variant-numeric: tabular-nums; }
-  li button { background: var(--pink); padding: 0.3rem 0.6rem; font-size: 0.85rem; }
+  li button {
+    background: #e6d5ff;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.85rem;
+    box-shadow: none;
+  }
   .total {
     display: flex;
     justify-content: space-between;
@@ -74,7 +89,17 @@
     font-size: 1.1rem;
     font-weight: bold;
   }
-  .empty { margin-top: 1.5rem; text-align: center; color: #8c8496; }
+  .empty {
+    margin-top: 1.5rem;
+    padding: 1.5rem 1rem;
+    border: 2px dashed var(--line);
+    border-radius: 12px;
+    background: var(--bg);
+    text-align: center;
+    line-height: 1.6;
+    color: #6b6375;
+  }
+  .empty .icon { font-size: 1.6rem; }
 </style>
 </head>
 <body>
@@ -85,7 +110,7 @@
     <input id="amount" type="number" placeholder="금액" min="0" step="1" required>
     <button type="submit">추가</button>
   </form>
-  <p class="empty" id="empty">아직 항목이 없어요. 첫 지출을 기록해 보세요!</p>
+  <p class="empty" id="empty"><span class="icon" aria-hidden="true">🌱</span><br>아직 기록된 지출이 없어요.<br>첫 항목을 추가해 보세요!</p>
   <ul id="list"></ul>
   <div class="total"><span>합계</span><span id="total">0원</span></div>
 </main>

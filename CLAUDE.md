@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 모든 대화와 커밋 메시지는 한국어로 작성한다.
 
+## 디자인 규칙
+
+버튼은 연보라(`#bb8cff`) 배경, 둥근 모서리 `border-radius: 12px`.
+
 ## 저장소 구성
 
 바이브 코딩 연습용 저장소. 빌드 시스템, 패키지 매니저, 테스트 스위트는 없다 — 실행할 lint/build/test 명령이 없다.
